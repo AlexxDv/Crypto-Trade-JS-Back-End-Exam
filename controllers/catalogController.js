@@ -155,7 +155,7 @@ catalogController.get("/:id/crypto", hasUser, async (req, res) => {
   }
 });
 
-catalogController.get("/search", async (req, res) => {
+catalogController.get("/search",hasUser, async (req, res) => {
   const { title, paymentMethod } = req.query;
   const crypto = await search(title, paymentMethod);
 
