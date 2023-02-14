@@ -6,6 +6,7 @@ const {
   deleteById,
   update,
   cryptoOffer,
+  search,
 } = require("../services/catalogService");
 const { parseError } = require("../util/parser");
 const catalogController = require("express").Router();
@@ -24,7 +25,8 @@ catalogController.get("/:id/details", async (req, res) => {
 
   //const isOwner = crypto,owner == req.user?._id
 
-  if (crypto.owner == req.user?._id) { // или да го сложим crypto.owner.toString()
+  if (crypto.owner == req.user?._id) {
+    // или да го сложим crypto.owner.toString()
 
     crypto.isOwner = true;
   } else if (
@@ -39,7 +41,7 @@ catalogController.get("/:id/details", async (req, res) => {
   });
 });
 
-catalogController.get("/create",hasUser, (req, res) => {
+catalogController.get("/create", hasUser, (req, res) => {
   res.render("create", {
     title: "Create new crypto",
   });
@@ -151,6 +153,16 @@ catalogController.get("/:id/crypto", hasUser, async (req, res) => {
       errors: parseError(err),
     });
   }
+});
+
+catalogController.get("/search", async (req, res) => {
+  const { title, paymentMethod } = req.query;
+  const crypto = await search(title, paymentMethod);
+
+  res.render("search", {
+    title: "Search",
+    crypto,
+  });
 });
 
 module.exports = catalogController;

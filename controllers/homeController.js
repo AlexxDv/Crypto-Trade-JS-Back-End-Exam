@@ -8,4 +8,11 @@ homeController.get("/", (req, res) => {
   });
 });
 
+homeController.get("/404", (req, res) => {
+  res.render("404", {
+    title: "Error Page",
+    user: req.user,
+  });
+});
+
 module.exports = homeController;

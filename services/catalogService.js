@@ -1,6 +1,5 @@
 const Crypto = require("../models/Crypto");
 
-
 async function getAll() {
   return await Crypto.find({}).lean(); // При подаване на празен обект, това означава -> намери ги всичките
 }
@@ -40,7 +39,21 @@ async function cryptoOffer(cryptoId, userId) {
   await crypto.save();
 }
 
+async function search(title, paymentMethod) {
+  let crypto = await this.getAll();
 
+  if (title) {
+    crypto = crypto.filter(
+      (crypto) => crypto.title.toLowerCase() == title.toLowerCase()
+    );
+  }
+
+  if (paymentMethod) {
+    crypto = crypto.filter((crypto) => crypto.paymentMethod == paymentMethod);
+  }
+
+  return crypto;
+}
 
 module.exports = {
   getAll,
@@ -50,4 +63,5 @@ module.exports = {
   create,
   deleteById,
   cryptoOffer,
+  search
 };
