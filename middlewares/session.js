@@ -12,7 +12,7 @@ module.exports = () => (req, res, next) => {
     } catch (err) {
       console.log("Invalid token");
       res.clearCookie("token");
-      res.redirect("/auth/login");
+      res.redirect("/404");
       return
     }
   }

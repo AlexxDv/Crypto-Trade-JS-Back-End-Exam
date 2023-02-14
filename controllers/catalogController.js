@@ -75,7 +75,7 @@ catalogController.get("/:id/edit", hasUser, async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
-    return res.redirect("/auth/404");
+    return res.redirect("/404");
   }
 
   res.render("edit", {
@@ -88,7 +88,7 @@ catalogController.post("/:id/edit", hasUser, async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
-    return res.redirect("/auth/404");
+    return res.redirect("/404");
   }
 
   const edited = {
@@ -120,7 +120,7 @@ catalogController.get("/:id/delete", hasUser, async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
-    return res.redirect("/auth/404");
+    return res.redirect("/404");
   }
 
   await deleteById(req.params.id);
