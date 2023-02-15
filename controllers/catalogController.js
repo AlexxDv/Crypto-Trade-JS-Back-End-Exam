@@ -23,16 +23,18 @@ catalogController.get("/", async (req, res) => {
 catalogController.get("/:id/details", async (req, res) => {
   const crypto = await getById(req.params.id);
 
-  //const isOwner = crypto.owner == req.user?._id
+  // const isOwner = crypto.owner === req.user?._id
 
   // или да го сложим crypto.owner.toString()
   
-  if (crypto.owner == req.user._id) {
+  if (crypto.owner == req.user?._id) {
     crypto.isOwner = true;
   } else if (
-    crypto.bookings.map((b) => b.toString()).includes(req.user._id.toString())
+    crypto.bookings.map((b) => b.toString()).includes(req.user?._id.toString())
   ) {
     crypto.isBooked = true;
+  } else if (req.user?._id) {
+    crypto.isGuest = true;
   }
 
   res.render("details", {
