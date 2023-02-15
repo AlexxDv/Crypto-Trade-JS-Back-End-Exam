@@ -12,22 +12,22 @@ const { parseError } = require("../util/parser");
 const catalogController = require("express").Router();
 
 catalogController.get("/", async (req, res) => {
-  const cryptos = await getAll();
+  const crypto = await getAll();
   res.render("catalog", {
-    tytle: "Catalog page",
+    title: "Catalog page",
     user: req.user,
-    cryptos,
+    crypto,
   });
 });
 
 catalogController.get("/:id/details", async (req, res) => {
   const crypto = await getById(req.params.id);
 
-  //const isOwner = crypto,owner == req.user?._id
+  //const isOwner = crypto.owner == req.user?._id
 
-  if (crypto.owner == req.user?._id) {
-    // или да го сложим crypto.owner.toString()
-
+  // или да го сложим crypto.owner.toString()
+  
+  if (crypto.owner == req.user._id) {
     crypto.isOwner = true;
   } else if (
     crypto.bookings.map((b) => b.toString()).includes(req.user._id.toString())
@@ -41,13 +41,13 @@ catalogController.get("/:id/details", async (req, res) => {
   });
 });
 
-catalogController.get("/create", hasUser, (req, res) => {
+catalogController.get("/create", hasUser(), (req, res) => {
   res.render("create", {
     title: "Create new crypto",
   });
 });
 
-catalogController.post("/create", hasUser, async (req, res) => {
+catalogController.post("/create", async (req, res) => {
   const crypto = {
     title: req.body.title,
     imageUrl: req.body.imageUrl,
@@ -73,7 +73,7 @@ catalogController.post("/create", hasUser, async (req, res) => {
   }
 });
 
-catalogController.get("/:id/edit", hasUser, async (req, res) => {
+catalogController.get("/:id/edit", hasUser(), async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
@@ -86,7 +86,7 @@ catalogController.get("/:id/edit", hasUser, async (req, res) => {
   });
 });
 
-catalogController.post("/:id/edit", hasUser, async (req, res) => {
+catalogController.post("/:id/edit", hasUser(), async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
@@ -95,11 +95,10 @@ catalogController.post("/:id/edit", hasUser, async (req, res) => {
 
   const edited = {
     title: req.body.title,
-    author: req.body.author,
     imageUrl: req.body.imageUrl,
-    review: req.body.review,
-    genre: req.body.genre,
-    stars: Number(req.body.stars),
+    price: Number(req.body.price),
+    description: req.body.description,
+    paymentMethod: req.body.paymentMethod,
   };
 
   try {
@@ -118,7 +117,7 @@ catalogController.post("/:id/edit", hasUser, async (req, res) => {
   }
 });
 
-catalogController.get("/:id/delete", hasUser, async (req, res) => {
+catalogController.get("/:id/delete", hasUser(), async (req, res) => {
   const crypto = await getById(req.params.id);
 
   if (crypto.owner != req.user._id) {
@@ -129,7 +128,7 @@ catalogController.get("/:id/delete", hasUser, async (req, res) => {
   res.redirect("/catalog");
 });
 
-catalogController.get("/:id/crypto", hasUser, async (req, res) => {
+catalogController.get("/:id/crypto", hasUser(), async (req, res) => {
   const crypto = await getById(req.params.id);
 
   try {
@@ -155,7 +154,7 @@ catalogController.get("/:id/crypto", hasUser, async (req, res) => {
   }
 });
 
-catalogController.get("/search",hasUser, async (req, res) => {
+catalogController.get("/search",hasUser(), async (req, res) => {
   const { title, paymentMethod } = req.query;
   const crypto = await search(title, paymentMethod);
 

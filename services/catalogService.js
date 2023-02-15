@@ -40,7 +40,7 @@ async function cryptoOffer(cryptoId, userId) {
 }
 
 async function search(title, paymentMethod) {
-  let crypto = await this.getAll();
+  let crypto = await getAll();
 
   if (title) {
     crypto = crypto.filter(
