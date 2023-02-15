@@ -33,7 +33,7 @@ catalogController.get("/:id/details", async (req, res) => {
     crypto.bookings.map((b) => b.toString()).includes(req.user?._id.toString())
   ) {
     crypto.isBooked = true;
-  } else if (req.user?._id) {
+  } else if (!req.user?._id) {
     crypto.isGuest = true;
   }
 
